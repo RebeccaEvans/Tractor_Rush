@@ -1,0 +1,38 @@
+body {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	grid-template-rows: 10vw auto 10vw;
+	grid-gap: 1em;
+  }
+  
+  header,
+  footer {
+	grid-column: 1 / span 5;
+	border: solid 2px black;
+  }
+  
+  main {
+	grid-column: 1 / span 3;
+	border: solid 2px red;
+	justify-self: center;
+  }
+  
+  aside {
+	grid-column: span 2;
+	border: solid 2px black;
+  }
+  
+  @media (max-width: 700px) {
+	
+	main,
+	aside {
+	  grid-column: 1 / span 5;
+	  border: solid 2px black;
+	  justify-items: center;
+	}
+	
+  }
+
+  .gameDiv {
+	  padding: 20px;
+  }
