@@ -1,7 +1,7 @@
 var config = {
     type: Phaser.AUTO,
-	width: 300,
-	height: 780,
+	width: 500,
+	height: 1000,
 	parent: 'phaser-game',
 	physics: {
 		default: 'arcade',
@@ -11,10 +11,12 @@ var config = {
         preload: preload,
         create: create,
         update: update
-    }
+	},
+	
 };
 
 var game = new Phaser.Game(config)
+
 // create game height/width variables
 var gameH = game.config.height
 var gameW = game.config.width
@@ -38,78 +40,120 @@ this.load.spritesheet('goat', 'assets/img/goat.png', {frameWidth: 128, frameHeig
 
 function create ()
 {
-
-//Display Background
-this.background = this.add.tileSprite(gameW/2, gameH/2, gameW, gameH, 'road')
-
-
-//Display Images
+	//Display Background
+	this.background = this.add.tileSprite(gameW/2, gameH/2, gameW, gameH, 'road')
 
 
-this.tractor = this.add.image(gameW/4, 680, 'tractor')
-this.tractor.displayWidth = gameW * 0.30
-this.tractor.scaleY = this.tractor.scaleX
 
-this.hay = this.add.sprite(gameW/4, 0, 'hay')
-this.hay.displayWidth = gameW * .40
-this.hay.scaleY = this.hay.scaleX
+	//create listener
+	cursors = this.input.keyboard.createCursorKeys()
 
-this.sack = this.add.sprite(gameW*.75, 0, 'sack')
-this.sack.displayWidth = gameW * .15
-this.sack.scaleY = this.sack.scaleX
+	//create player sprite
+	this.playerSprite = this.physics.add.sprite(gameW/4, 800, 'tractor')
+	this.playerSprite.displayWidth = gameW * 0.25
+	this.playerSprite.scaleY = this.playerSprite.scaleX
+	this.playerSprite.setDrag(150, 200)
+	this.playerSprite.setCollideWorldBounds(true)
 
-this.crate = this.add.sprite(gameW*.75, 50, 'crate')
-this.crate.displayWidth = gameW * .15
-this.crate.scaleY = this.crate.scaleX
+	staticObs = this.physics.add.group()
+	
+	var hay = staticObs.create(gameW/4, 0, 'hay')
+	var sack = staticObs.create(gameW/2, 0, 'sack')
+	var crate = staticObs.create(gameW*0.75, 0, 'crate')
 
-this.bull1 = this.add.sprite(0, 30, 'bull1', 0)
-this.bull1.displayWidth = gameW * .40
-this.bull1.scaleY = this.bull1.scaleX
 
-this.anims.create({
-	key: 'walk',
-	repeat: -1,
-	frameRate: 5,
-	frames: this.anims.generateFrameNames('bull1', {start: 0, end: 2})
-})
-this.bull1.play('walk')
 
-this.goat = this.add.sprite(300, 50, 'goat', 7)
-this.anims.create({
-	key: 'goat_walk',
-	repeat: -1,
-	frameRate: 3,
-	frames: this.anims.generateFrameNames('goat', {start: 7, end: 4})
-})
-this.goat.play('goat_walk')
+	console.log(staticObs)
+
+/* 	var obstacles = ['hay', 'sack', 'crate']
+	var index = Math.floor(Math.random()*3)
+	var key = obstacles[index]
+	this.obstacle = this.physics.add.sprite(gameW/2, 0, key)
+	var position = [0.25, 0.50, 0.75]
+	var posIndex = Math.floor(Math.random()*3)
+	var posX = gameW * position[posIndex]
+	this.obstacle.x = posX
+	console.log(this.obstacle) */
+
+	this.bull1 = this.add.sprite(0, 30, 'bull1', 0)
+	this.bull1.displayWidth = gameW * .40
+	this.bull1.scaleY = this.bull1.scaleX
+	this.anims.create({
+		key: 'walk',
+		repeat: -1,
+		frameRate: 5,
+		frames: this.anims.generateFrameNames('bull1', {start: 0, end: 2}),
+		hideOnComplete: true
+	})
+	this.bull1.play('walk')
+
+	this.goat = this.add.sprite(500, 50, 'goat', 7)
+	this.goat.displayWidth = gameW * .35
+	this.goat.scaleY = this.goat.scaleX
+	this.anims.create({
+		key: 'goat_walk',
+		repeat: -1,
+		frameRate: 3,
+		frames: this.anims.generateFrameNames('goat', {start: 7, end: 4}),
+		hideOnComplete: true
+	})
+	this.goat.play('goat_walk')
 
 }
 
 function update ()
 {
-//scroll background
-this.background.tilePositionY -= 5
+	//scroll background
+	this.background.tilePositionY -= 5
 
-this.hay.y += 5
-if (this.hay.y > 780) {
-	this.hay.y = 0
-}
+	/* this.obstacle.y += 5 */
 
-this.sack.y += 5
-if (this.sack.y > 780) {
-	this.sack.y = 0
-}
+	staticObs.setVelocityY(300)
+	
+	//move player sprite
+	if(cursors.up.isDown) {
+		this.playerSprite.setVelocityY(-200)
+	}
+	else if (cursors.down.isDown) {
+		this.playerSprite.setVelocityY(300)
+	}
+	else if (cursors.right.isDown) {
+		this.playerSprite.setVelocityX(200)
+	}
+	else if (cursors.left.isDown) {
+		this.playerSprite.setVelocityX(-200)
+	}
 
-this.crate.y += 5
-if (this.crate.y > gameH) {
-	this.crate.y = 0
-}
+	
 
-this.bull1.x += 2
-this.bull1.y += 2
-if (this.bull1.x > gameW) {
-	this.bull1.x = 30
-	this.bull1.y = 0
+/* 	this.hay.y += 5
+	if (this.hay.y > 780) {
+		this.hay.y = 0
+	}
+
+	this.sack.y += 5
+	if (this.sack.y > 780) {
+		this.sack.y = 0
+	}
+
+	this.crate.y += 5
+	if (this.crate.y > gameH) {
+		this.crate.y = 0
+	} */
+
+	this.bull1.x += 2
+	this.bull1.y += 2
+	if (this.bull1.x > gameW) {
+		this.bull1.x = 30
+		this.bull1.y = 0
+	}
+
+	this.goat.x -= 2
+	this.goat.y += 3
+
+if (this.goat.x == 0) {
+	this.goat.x = 500
+	this.goat.y = 200
 }
 
 }

@@ -3,7 +3,14 @@ body {
 	grid-template-columns: repeat(4, 1fr);
 	grid-template-rows: 10vw auto 10vw;
 	grid-gap: 1em;
-  }
+	font-family: 'Bubblegum Sans', cursive;
+}
+
+header {
+	font-size: 2em;
+	justify-self: center;
+
+}
   
   header,
   footer {
@@ -28,11 +35,21 @@ body {
 	aside {
 	  grid-column: 1 / span 5;
 	  border: solid 2px black;
-	  justify-items: center;
 	}
 	
   }
 
   .gameDiv {
+	padding: 20px;
+  }
+
+  .gameStats {
+	  border: solid 2px green;
+	  margin: 20px 40px 20px 40px;
 	  padding: 20px;
+  }
+
+  .wrapper {
+	  display: flex;
+	  flex-wrap: wrap;
   }
